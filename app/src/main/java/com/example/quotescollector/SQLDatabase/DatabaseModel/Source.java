@@ -11,6 +11,6 @@ public class Source {
     @PrimaryKey
     public int sourceID;
 
-    public String sourceName;
+    public String sourceTitle;
     public int sourceTypeID;
 }

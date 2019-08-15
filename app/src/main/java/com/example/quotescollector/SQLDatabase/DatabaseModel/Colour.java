@@ -4,10 +4,10 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity
-public class Author {
+public class Colour {
 
     @PrimaryKey
-    public int authorID;
+    public int colourID;
 
-    public String name;
+    public String colour;
 }
