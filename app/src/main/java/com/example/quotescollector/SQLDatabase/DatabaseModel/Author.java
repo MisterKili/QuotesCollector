@@ -6,8 +6,12 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class Author {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int authorID;
 
-    public String name;
+    public String authorName;
+
+    public Author(String authorName) {
+        this.authorName = authorName;
+    }
 }

@@ -6,8 +6,12 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity
 public class Colour {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int colourID;
 
     public String colour;
+
+    public Colour(String colour) {
+        this.colour = colour;
+    }
 }
