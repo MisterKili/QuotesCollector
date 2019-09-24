@@ -6,7 +6,6 @@ public class SourceFull {
     public String sourceTitle;
     public String sourceTypeName;
 
-//    public SourceFull(){}
 
     public SourceFull(String sourceTitle, String sourceTypeName) {
         this.sourceTitle = sourceTitle;

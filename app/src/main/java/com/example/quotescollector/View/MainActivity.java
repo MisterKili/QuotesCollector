@@ -1,8 +1,10 @@
 package com.example.quotescollector.View;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.example.quotescollector.Model.SourceFull;
 import com.example.quotescollector.R;
@@ -10,7 +12,6 @@ import com.example.quotescollector.SQLDatabase.DatabaseModel.Author;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Quote;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Source;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.SourceType;
-import com.example.quotescollector.SQLDatabase.Handler.QuotesDao;
 import com.example.quotescollector.SQLDatabase.Handler.QuotesDatabase;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,5 +46,10 @@ public class MainActivity extends AppCompatActivity {
         for(SourceFull s : database.quotesDao().getAllSourceFull()){
             Log.d("aaaa", s.toString());
         }
+    }
+
+    public void toList(View view) {
+        Intent intent = new Intent(this, QuotesListActivity.class);
+        startActivity(intent);
     }
 }

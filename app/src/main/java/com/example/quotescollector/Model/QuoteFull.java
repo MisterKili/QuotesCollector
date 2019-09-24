@@ -11,11 +11,16 @@ public class QuoteFull {
     public String authorName;
 //    public SourceFull source;
 
-//    public QuoteFull(String quote, String description, String authorName, SourceFull source) {
-//        this.quote = quote;
-//        this.description = description;
-//        this.authorName = authorName;
-//        this.source = source;
-//    }
+    public QuoteFull(int quoteID, String quote, String description, String authorName) {
+        this.quoteID = quoteID;
+        this.quote = quote;
+        this.description = description;
+        this.authorName = authorName;
+    }
+
+
+    public String getAuthor(){
+        return authorName;
+    }
 
 }

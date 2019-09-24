@@ -4,6 +4,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import com.example.quotescollector.Model.QuoteFull;
 import com.example.quotescollector.Model.SourceFull;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Author;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Category;
@@ -63,21 +64,9 @@ public interface QuotesDao {
     @Query("SELECT * FROM Source")
     public List<Source> getAllSources();
 
+    @Query("SELECT quoteID, quote, description, authorName " +
+            "FROM quote q JOIN author a ON a.authorID = q.authorID")
+    public List<QuoteFull> getAllQuotesFull();
     // ===================== DELETE =====================
-
-
-
-
-
-//    static class SourceFull{
-//
-//        public String sourceTitle;
-//        public String sourceTypeName;
-//
-//        @Override
-//        public String toString(){
-//            return sourceTitle + " " + sourceTypeName;
-//        }
-//    }
 
 }
