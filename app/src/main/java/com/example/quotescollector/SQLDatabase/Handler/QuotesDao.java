@@ -61,6 +61,9 @@ public interface QuotesDao {
     @Query("SELECT * FROM SourceType")
     public List<SourceType> getAllSourceTypes();
 
+    @Query("SELECT * FROM Author")
+    public List<Author> getAllAuthors();
+
     @Query("SELECT * FROM Source")
     public List<Source> getAllSources();
 

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.quotescollector.Model.SourceFull;
 import com.example.quotescollector.R;
@@ -40,16 +41,23 @@ public class MainActivity extends AppCompatActivity {
 
         database.quotesDao().insertQuote(new Quote("Byl sobie wielki wybuch", "jakis opis",
                 2, 1));
-        database.quotesDao().insertQuote(new Quote("Byl sobie wielki wybuch", "jakis opis",
-                2, 1));
 
         for(SourceFull s : database.quotesDao().getAllSourceFull()){
             Log.d("aaaa", s.toString());
+        }
+
+        for(Author a : database.quotesDao().getAllAuthors()){
+            Log.d("aaaa autor", a.authorID + " " + a.authorName);
         }
     }
 
     public void toList(View view) {
         Intent intent = new Intent(this, QuotesListActivity.class);
+        startActivity(intent);
+    }
+
+    public void toAdd(View view) {
+        Intent intent = new Intent(this, AddQuoteManActivity.class);
         startActivity(intent);
     }
 }

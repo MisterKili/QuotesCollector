@@ -5,6 +5,7 @@ public class SourceFull {
 
     public String sourceTitle;
     public String sourceTypeName;
+//    public int sourceID;
 
 
     public SourceFull(String sourceTitle, String sourceTypeName) {
