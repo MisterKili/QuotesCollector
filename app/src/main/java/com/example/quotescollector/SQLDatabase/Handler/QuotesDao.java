@@ -70,6 +70,11 @@ public interface QuotesDao {
     @Query("SELECT quoteID, quote, description, authorName " +
             "FROM quote q JOIN author a ON a.authorID = q.authorID")
     public List<QuoteFull> getAllQuotesFull();
+
+
     // ===================== DELETE =====================
+    @Query("DELETE FROM Quote;")
+    public void deleteAllQuotes();
+
 
 }
