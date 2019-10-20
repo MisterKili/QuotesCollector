@@ -1,11 +1,17 @@
 package com.example.quotescollector.View;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -14,6 +20,7 @@ import com.example.quotescollector.R;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Author;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Quote;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Source;
+import com.example.quotescollector.SQLDatabase.DatabaseModel.SourceType;
 import com.example.quotescollector.SQLDatabase.Handler.QuotesDatabase;
 
 import java.util.List;
@@ -106,4 +113,123 @@ public class AddQuoteManActivity extends AppCompatActivity {
         }
     }
 
+    public void addSource(View view) {
+        final Context context = view.getContext();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Add source");
+
+        final LinearLayout parentLL = new LinearLayout(context);
+        parentLL.setOrientation(LinearLayout.VERTICAL);
+
+        final EditText input = new EditText(context);
+        input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Source name...");
+
+        final LinearLayout childLL = new LinearLayout(context);
+        childLL.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        childLL.setOrientation(LinearLayout.HORIZONTAL);
+
+        Spinner sp = new Spinner(context);
+        sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+        List<SourceType> sourceTypes = database.quotesDao().getAllSourceTypes();
+        ArrayAdapter<SourceType> adapter = new ArrayAdapter<>(context,
+                android.R.layout.simple_spinner_item, sourceTypes);
+        sp.setAdapter(adapter);
+
+        Button button = new Button(context);
+        button.setText("+");
+        button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT));
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {        //pokazanie EditText do SourceType
+                LinearLayout childLL2 = new LinearLayout(context);
+                childLL2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                childLL2.setOrientation(LinearLayout.HORIZONTAL);
+
+                final EditText input = new EditText(context);
+                input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                input.setHint("Source type...");
+
+                Button buttonAddSourceType = new Button(context);
+                buttonAddSourceType.setText("Add");
+                buttonAddSourceType.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));
+                buttonAddSourceType.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //TODO dodawanie SurceType
+                    }
+                });
+
+                childLL2.addView(input);
+                childLL2.addView(buttonAddSourceType);
+
+                parentLL.addView(childLL2);
+            }
+        });
+
+        childLL.addView(sp);
+        childLL.addView(button);
+
+        parentLL.addView(input);
+        parentLL.addView(childLL);
+
+        builder.setView(parentLL);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String authorName = input.getText().toString();
+                database.quotesDao().insertAuthor(new Author(authorName));
+                fillAuthorSpinner();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    public void addAuthor(View view) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add author");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String authorName = input.getText().toString();
+                database.quotesDao().insertAuthor(new Author(authorName));
+                fillAuthorSpinner();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
 }

@@ -14,9 +14,9 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:hint="Write quote"
         android:inputType="textPersonName"
         android:singleLine="false"
-        android:text="Write quote"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,7 +45,8 @@
                 android:id="@+id/addAuthorButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+" />
+                android:text="+"
+                android:onClick="addAuthor"/>
         </TableRow>
 
         <TableRow
@@ -64,7 +65,8 @@
                 android:id="@+id/addSourceButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+" />
+                android:text="+"
+                android:onClick="addSource"/>
         </TableRow>
 
     </TableLayout>
@@ -76,8 +78,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:ems="10"
+        android:hint="Description"
         android:inputType="textPersonName"
-        android:text="Description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
 
@@ -89,4 +91,5 @@
         android:text="Done"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
+
 </android.support.constraint.ConstraintLayout>

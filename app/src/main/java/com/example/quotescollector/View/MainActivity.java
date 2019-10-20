@@ -3,8 +3,14 @@ package com.example.quotescollector.View;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.quotescollector.Model.SourceFull;
@@ -14,6 +20,8 @@ import com.example.quotescollector.SQLDatabase.DatabaseModel.Quote;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Source;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.SourceType;
 import com.example.quotescollector.SQLDatabase.Handler.QuotesDatabase;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -35,4 +35,12 @@
         tools:layout_editor_absoluteX="9dp"
         android:onClick="clearDatabase"/>
 
+    <LinearLayout
+        android:id="@+id/LLTEST"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/clearDatabase"
+        tools:layout_editor_absoluteX="1dp"></LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
