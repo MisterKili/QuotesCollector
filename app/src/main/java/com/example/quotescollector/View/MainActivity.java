@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         database = QuotesDatabase.getInstance(this);
 
-        database.quotesDao().deleteAllQuotes();
-
         database.quotesDao().insertAuthor(new Author("Stephen King"));
         database.quotesDao().insertAuthor(new Author("Stephen Hawking"));
         database.quotesDao().insertAuthor(new Author("Richard Dawkins"));
@@ -77,6 +75,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearDatabase(View view){
-        database.quotesDao().deleteAllQuotes();
+        database.clearAllTables();
     }
 }

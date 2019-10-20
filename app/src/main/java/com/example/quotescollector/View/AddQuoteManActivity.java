@@ -1,7 +1,6 @@
 package com.example.quotescollector.View;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +37,8 @@ public class AddQuoteManActivity extends AppCompatActivity {
     private Author author;
     private Quote quote;
     private SourceFull source;
+    private int sourceID;
+    private int sourceTypeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,27 +76,30 @@ public class AddQuoteManActivity extends AppCompatActivity {
             }
         });
 
-        authorList = database.quotesDao().getAllAuthors();
-        sourceList = database.quotesDao().getAllSourceFull();
-
         fillAuthorSpinner();
         fillSourceSpinner();
     }
 
     public void doneClick(View view) {
+
+        System.out.println("doneClick");
+        System.out.println("author: "+author.authorName);
+        SourceFull sf = database.quotesDao().getSourceFullOne(4);
+        System.out.println("source: "+sf.sourceTitle + "  " + sf.sourceTypeName);
+
         String quoteS = etQuote.getText().toString();
         String descriptionS = etDescription.getText().toString();
 
         QuotesDatabase database = QuotesDatabase.getInstance(this);
-//        int authorID = (int) database.quotesDao().insertAuthor(author);
 
-        Quote quote = new Quote(quoteS, descriptionS, author.authorID, 1);
+        Quote quote = new Quote(quoteS, descriptionS, author.authorID, sourceID);
         database.quotesDao().insertQuote(quote);
 
         Toast.makeText(this, "Quote added", Toast.LENGTH_LONG).show();
     }
 
     private void fillAuthorSpinner() {
+        authorList = database.quotesDao().getAllAuthors();
         if(authorList != null) {
             ArrayAdapter<Author> adapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_spinner_item, authorList);
@@ -105,6 +109,7 @@ public class AddQuoteManActivity extends AppCompatActivity {
     }
 
     private void fillSourceSpinner() {
+        sourceList = database.quotesDao().getAllSourceFull();
         if(sourceList != null) {
             ArrayAdapter<SourceFull> adapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_spinner_item, sourceList);
@@ -113,74 +118,97 @@ public class AddQuoteManActivity extends AppCompatActivity {
         }
     }
 
+    //TODO refactoring
     public void addSource(View view) {
-        final Context context = view.getContext();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add source");
 
-        final LinearLayout parentLL = new LinearLayout(context);
+        final LinearLayout parentLL = new LinearLayout(this);
         parentLL.setOrientation(LinearLayout.VERTICAL);
 
-        final EditText input = new EditText(context);
-        input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+        final EditText inputSourceName = new EditText(this);
+        inputSourceName.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("Source name...");
+        inputSourceName.setInputType(InputType.TYPE_CLASS_TEXT);
+        inputSourceName.setHint("Source name...");
 
-        final LinearLayout childLL = new LinearLayout(context);
+        final LinearLayout childLL = new LinearLayout(this);
         childLL.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
         childLL.setOrientation(LinearLayout.HORIZONTAL);
 
-        Spinner sp = new Spinner(context);
-        sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+        final Spinner spinnerSourceTypes = new Spinner(this);
+        spinnerSourceTypes.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
-        List<SourceType> sourceTypes = database.quotesDao().getAllSourceTypes();
-        ArrayAdapter<SourceType> adapter = new ArrayAdapter<>(context,
-                android.R.layout.simple_spinner_item, sourceTypes);
-        sp.setAdapter(adapter);
+        final List<SourceType>[] sourceTypes = new List[]{database.quotesDao().getAllSourceTypes()};
+        ArrayAdapter<SourceType> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, sourceTypes[0]);
+        spinnerSourceTypes.setAdapter(adapter);
+        spinnerSourceTypes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                SourceType sourceType = sourceTypes[0].get(i);
+                sourceTypeID = sourceType.sourceTypeID;
+            }
 
-        Button button = new Button(context);
-        button.setText("+");
-        button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+
+        Button buttonAddSourceType = new Button(this);
+        buttonAddSourceType.setText("+");
+        buttonAddSourceType.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonAddSourceType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {        //pokazanie EditText do SourceType
-                LinearLayout childLL2 = new LinearLayout(context);
+
+                final LinearLayout childLL2 = new LinearLayout(getApplicationContext());
                 childLL2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
                 childLL2.setOrientation(LinearLayout.HORIZONTAL);
 
-                final EditText input = new EditText(context);
-                input.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                final EditText inputSourceType = new EditText(getApplicationContext());
+                inputSourceType.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                input.setHint("Source type...");
+                inputSourceType.setInputType(InputType.TYPE_CLASS_TEXT);
+                inputSourceType.setHint("Source type...");
 
-                Button buttonAddSourceType = new Button(context);
+                Button buttonAddSourceType = new Button(getApplicationContext());
                 buttonAddSourceType.setText("Add");
                 buttonAddSourceType.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT));
                 buttonAddSourceType.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        //TODO dodawanie SurceType
+                    public void onClick(View view) {        //git działa
+                        String sourceTypeName = inputSourceType.getText().toString();
+                        sourceTypeID = (int) database.quotesDao().insertSourceType(new SourceType(sourceTypeName));
+                        inputSourceType.setText("");
+
+                        sourceTypes[0] = database.quotesDao().getAllSourceTypes();
+                        ArrayAdapter<SourceType> adapter = new ArrayAdapter<>(getApplicationContext(),
+                                android.R.layout.simple_spinner_item, sourceTypes[0]);
+                        spinnerSourceTypes.setAdapter(adapter);
+
+                        parentLL.removeView(childLL2);
                     }
                 });
 
-                childLL2.addView(input);
+                childLL2.addView(inputSourceType);
                 childLL2.addView(buttonAddSourceType);
 
                 parentLL.addView(childLL2);
             }
         });
 
-        childLL.addView(sp);
-        childLL.addView(button);
+        childLL.addView(spinnerSourceTypes);
+        childLL.addView(buttonAddSourceType);
 
-        parentLL.addView(input);
+        parentLL.addView(inputSourceName);
         parentLL.addView(childLL);
 
         builder.setView(parentLL);
@@ -188,9 +216,9 @@ public class AddQuoteManActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String authorName = input.getText().toString();
-                database.quotesDao().insertAuthor(new Author(authorName));
-                fillAuthorSpinner();
+                String sourceName = inputSourceName.getText().toString();
+                sourceID = (int)database.quotesDao().insertSource(new Source(sourceName, sourceTypeID));
+                fillSourceSpinner();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -203,18 +231,16 @@ public class AddQuoteManActivity extends AppCompatActivity {
         builder.show();
     }
 
+
     public void addAuthor(View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add author");
 
-        // Set up the input
         final EditText input = new EditText(this);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
-        // Set up the buttons
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -71,6 +71,11 @@ public interface QuotesDao {
             "FROM quote q JOIN author a ON a.authorID = q.authorID")
     public List<QuoteFull> getAllQuotesFull();
 
+    @Query("SELECT sourceTitle, st.sourceTypeName " +
+            "FROM source s JOIN SourceType st ON s.sourceTypeID = st.sourceTypeID " +
+            "WHERE s.sourceID = :id")
+    public SourceFull getSourceFullOne(int id);
+
 
     // ===================== DELETE =====================
     @Query("DELETE FROM Quote;")
