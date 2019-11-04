@@ -2,6 +2,7 @@ package com.example.quotescollector.View;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -28,8 +29,8 @@ public class AddQuoteManActivity extends AppCompatActivity {
 
     QuotesDatabase database;
 
-    private EditText etQuote, etDescription;
-    private Spinner spinSource, spinAuthor;
+    protected EditText etQuote, etDescription;
+    protected Spinner spinSource, spinAuthor;
 
     private List<Author> authorList;
     private List<SourceFull> sourceList;
@@ -48,6 +49,8 @@ public class AddQuoteManActivity extends AppCompatActivity {
         database = QuotesDatabase.getInstance(this);
 
         etQuote = findViewById(R.id.quoteInput);
+        etQuote.setWidth(Resources.getSystem().getDisplayMetrics().widthPixels / 2);
+
         etDescription = findViewById(R.id.descriptionInput);
         spinSource = findViewById(R.id.sourceSpinner);
         spinAuthor = findViewById(R.id.authorSpinner);
@@ -81,18 +84,26 @@ public class AddQuoteManActivity extends AppCompatActivity {
     }
 
     public void doneClick(View view) {
-
         System.out.println("doneClick");
         System.out.println("author: "+author.authorName);
-        SourceFull sf = database.quotesDao().getSourceFullOne(4);
+
+        System.out.println("source id: "+ sourceID);
+        System.out.println("sourcefull id: "+ source.sourceID);
+
+        SourceFull sf = database.quotesDao().getSourceFullOne(source.sourceID);
         System.out.println("source: "+sf.sourceTitle + "  " + sf.sourceTypeName);
 
         String quoteS = etQuote.getText().toString();
+        System.out.println("quote: "+quoteS);
         String descriptionS = etDescription.getText().toString();
 
-        QuotesDatabase database = QuotesDatabase.getInstance(this);
+        if (descriptionS.isEmpty()){
+            descriptionS = "brak opisu";
+        }
 
-        Quote quote = new Quote(quoteS, descriptionS, author.authorID, sourceID);
+        System.out.println("desc: " + descriptionS);
+
+        Quote quote = new Quote(quoteS, descriptionS, author.authorID, source.sourceID);
         database.quotesDao().insertQuote(quote);
 
         Toast.makeText(this, "Quote added", Toast.LENGTH_LONG).show();
@@ -193,6 +204,7 @@ public class AddQuoteManActivity extends AppCompatActivity {
                         ArrayAdapter<SourceType> adapter = new ArrayAdapter<>(getApplicationContext(),
                                 android.R.layout.simple_spinner_item, sourceTypes[0]);
                         spinnerSourceTypes.setAdapter(adapter);
+                        spinnerSourceTypes.setSelection(sourceTypes[0].size() - 1, true);
 
                         parentLL.removeView(childLL2);
                     }
@@ -219,6 +231,7 @@ public class AddQuoteManActivity extends AppCompatActivity {
                 String sourceName = inputSourceName.getText().toString();
                 sourceID = (int)database.quotesDao().insertSource(new Source(sourceName, sourceTypeID));
                 fillSourceSpinner();
+                spinSource.setSelection(sourceList.size() - 1, true);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -247,6 +260,7 @@ public class AddQuoteManActivity extends AppCompatActivity {
                 String authorName = input.getText().toString();
                 database.quotesDao().insertAuthor(new Author(authorName));
                 fillAuthorSpinner();
+                spinAuthor.setSelection(authorList.size() - 1, true);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

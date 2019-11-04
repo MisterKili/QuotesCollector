@@ -49,12 +49,12 @@ public interface QuotesDao {
     @Query("SELECT authorID FROM author WHERE authorName = :name")
     public int getAuthorID(String name);
 
-    @Query("SELECT sourceTitle, sourceTypeName " +
+    @Query("SELECT sourceTitle, sourceTypeName, s.sourceID " +
             "FROM source s JOIN SourceType st ON s.sourceTypeID = st.sourceTypeID " +
             "WHERE s.sourceID = :id")
     public List<SourceFull> getSourceFull(int id);
 
-    @Query("SELECT sourceTitle, st.sourceTypeName " +
+    @Query("SELECT sourceTitle, st.sourceTypeName, s.sourceID " +
             "FROM source s JOIN SourceType st ON s.sourceTypeID = st.sourceTypeID ")
     public List<SourceFull> getAllSourceFull();
 
@@ -67,14 +67,21 @@ public interface QuotesDao {
     @Query("SELECT * FROM Source")
     public List<Source> getAllSources();
 
-    @Query("SELECT quoteID, quote, description, authorName " +
-            "FROM quote q JOIN author a ON a.authorID = q.authorID")
+    @Query("SELECT quoteID, quote, description, authorName, s.sourceID " +
+            "FROM quote q JOIN author a ON a.authorID = q.authorID " +
+            "JOIN source s ON q.sourceID = s.sourceID")
     public List<QuoteFull> getAllQuotesFull();
 
-    @Query("SELECT sourceTitle, st.sourceTypeName " +
+    @Query("SELECT sourceTitle, st.sourceTypeName, s.sourceID " +
             "FROM source s JOIN SourceType st ON s.sourceTypeID = st.sourceTypeID " +
             "WHERE s.sourceID = :id")
     public SourceFull getSourceFullOne(int id);
+
+    @Query("SELECT quoteID, quote, description, authorName, s.sourceID " +
+            "FROM quote q JOIN author a ON a.authorID = q.authorID " +
+            "JOIN source s ON q.sourceID = s.sourceID " +
+            "WHERE q.quoteID = :id")
+    public QuoteFull getQuoteFull(int id);
 
 
     // ===================== DELETE =====================

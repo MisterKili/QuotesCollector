@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".View.AddQuoteManActivity"></activity>
         <activity android:name=".View.QuotesListActivity" />
+        <activity android:name=".View.ModifyQuoteActivity"/>
         <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

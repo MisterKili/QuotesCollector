@@ -2,8 +2,11 @@ package com.example.quotescollector.View;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.quotescollector.Model.QuoteFull;
 import com.example.quotescollector.R;
@@ -16,7 +19,7 @@ public class QuotesListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<QuoteFull> myDataset;
+    private List<QuoteFull> mQuotesFull;
     QuotesDatabase database;
 
     @Override
@@ -27,15 +30,27 @@ public class QuotesListActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.quotesRV);
 
         recyclerView.setHasFixedSize(true);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL);
+
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
         database = QuotesDatabase.getInstance(this);
-        myDataset = database.quotesDao().getAllQuotesFull();
+        mQuotesFull = database.quotesDao().getAllQuotesFull();
 
-        mAdapter = new QuotesListAdapter(myDataset);
+//        SourceFull sf = database.quotesDao().getSourceFullOne(1);
+//        QuoteFull qf = database.quotesDao().getQuoteFull(1);
+//        qf.source = sf;
+//        Toast.makeText(this, qf.quote + " " + qf.authorName + " " + qf.source.sourceTitle + " " +
+//                qf.source.sourceTypeName, Toast.LENGTH_LONG).show();
+
+        mAdapter = new QuotesListAdapter(mQuotesFull);
         recyclerView.setAdapter(mAdapter);
+
+
 
     }
 }
