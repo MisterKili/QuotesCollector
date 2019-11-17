@@ -1,21 +1,37 @@
 package com.example.quotescollector.View;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.quotescollector.Model.OCR;
 import com.example.quotescollector.Model.SourceFull;
+import com.example.quotescollector.Model.tools.RequestPermissionsTool;
+import com.example.quotescollector.Model.tools.RequestPermissionsToolImpl;
 import com.example.quotescollector.R;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Author;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Quote;
@@ -23,6 +39,10 @@ import com.example.quotescollector.SQLDatabase.DatabaseModel.Source;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.SourceType;
 import com.example.quotescollector.SQLDatabase.Handler.QuotesDatabase;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class AddQuoteManActivity extends AppCompatActivity {
@@ -31,6 +51,8 @@ public class AddQuoteManActivity extends AppCompatActivity {
 
     protected EditText etQuote, etDescription;
     protected Spinner spinSource, spinAuthor;
+    ProgressBar progressBar;
+    ImageView imageView;
 
     private List<Author> authorList;
     private List<SourceFull> sourceList;
@@ -40,6 +62,11 @@ public class AddQuoteManActivity extends AppCompatActivity {
     private SourceFull source;
     private int sourceID;
     private int sourceTypeID;
+
+    OCR ocr;
+    String mCameraFileName;
+
+    private RequestPermissionsTool requestTool; //for API >=23 only
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +108,27 @@ public class AddQuoteManActivity extends AppCompatActivity {
 
         fillAuthorSpinner();
         fillSourceSpinner();
+
+        //==========================================================
+        imageView = (ImageView) findViewById(R.id.imageViewPhoto);
+        progressBar = findViewById(R.id.progressBarQuote);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions();
+        }
+
+        ocr = new OCR(this);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String sUri = extras.getString("imageUri");
+            if(sUri != null){
+                ocr.setUri(sUri);
+                imageView.setImageURI(ocr.getUri());
+            }
+        }
+        //==========================================================
     }
 
     public void doneClick(View view) {
@@ -271,5 +319,108 @@ public class AddQuoteManActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    /**
+     * to get high resolution image from camera
+     */
+    private void startCameraActivity() {
+
+        try {
+            String IMGS_PATH = Environment.getExternalStorageDirectory().toString() + "/TesseractSample/imgs";
+            ocr.prepareDirectory(IMGS_PATH);
+
+            String img_path = IMGS_PATH + "/ocr.jpg";
+
+            ocr.setUri(Uri.fromFile(new File(img_path)));
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+            Intent intent = new Intent();
+            intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+
+            Date date = new Date();
+            DateFormat df = new SimpleDateFormat("-mm-ss");
+
+            String newPicFile = df.format(date) + ".jpg";
+            String outPath = "/sdcard/" + newPicFile;
+            File outFile = new File(outPath);
+
+            mCameraFileName = outFile.toString();
+            Uri outuri = Uri.fromFile(outFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outuri);
+            startActivityForResult(intent, 2);
+
+        } catch (Exception e) {
+            Log.e("startCamera", e.getMessage());
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 2) {
+                if (data != null) {
+                    ocr.setUri(data.getData());
+                    imageView.setImageURI(ocr.getUri());
+                    imageView.setVisibility(View.VISIBLE);
+                }
+                if (mCameraFileName != null) {
+                    ocr.setUri(Uri.fromFile(new File(mCameraFileName)));
+//                    try {
+//                        Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputFileUri);
+//                        imageView
+
+                    imageView.setImageURI(ocr.getUri());
+
+//                    imageView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            Intent intent = new Intent(v.getContext(), PhotoActivity.class);
+//                            intent.putExtra("imageUri", ocr.getUri().toString());
+//                            startActivity(intent);
+//                        }
+//                    });
+////                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+                }
+                File file = new File(mCameraFileName);
+                if (!file.exists()) {
+                    file.mkdir();
+                }
+                ocr.doOCR(etQuote, progressBar);
+            }
+        }
+    }
+
+    private void requestPermissions() {
+        String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        requestTool = new RequestPermissionsToolImpl();
+        requestTool.requestPermissions(this, permissions);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        boolean grantedAllPermissions = true;
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                grantedAllPermissions = false;
+            }
+        }
+
+        if (grantResults.length != permissions.length || (!grantedAllPermissions)) {
+
+            requestTool.onPermissionDenied();
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+    }
+
+    public void takePhoto(View view) {
+        startCameraActivity();
     }
 }

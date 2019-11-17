@@ -15,7 +15,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Write quote"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
         android:singleLine="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -91,5 +91,30 @@
         android:text="Done"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
+
+    <ProgressBar
+        android:id="@+id/progressBarQuote"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/takePhoto"
+        app:layout_constraintEnd_toEndOf="@+id/quoteInput" />
+
+    <Button
+        android:id="@+id/takePhoto"
+        android:layout_width="55dp"
+        android:layout_height="53dp"
+        android:background="@android:drawable/ic_menu_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/quoteInput"
+        app:layout_constraintEnd_toEndOf="@+id/quoteInput"
+        android:onClick="takePhoto"/>
+
+    <ImageView
+        android:id="@+id/imageViewPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/doneButton"
+        app:srcCompat="@mipmap/ic_launcher" />
 
 </android.support.constraint.ConstraintLayout>
