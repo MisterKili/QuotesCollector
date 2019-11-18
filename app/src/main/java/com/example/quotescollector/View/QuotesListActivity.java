@@ -41,16 +41,16 @@ public class QuotesListActivity extends AppCompatActivity {
         database = QuotesDatabase.getInstance(this);
         mQuotesFull = database.quotesDao().getAllQuotesFull();
 
-//        SourceFull sf = database.quotesDao().getSourceFullOne(1);
-//        QuoteFull qf = database.quotesDao().getQuoteFull(1);
-//        qf.source = sf;
-//        Toast.makeText(this, qf.quote + " " + qf.authorName + " " + qf.source.sourceTitle + " " +
-//                qf.source.sourceTypeName, Toast.LENGTH_LONG).show();
+
 
         mAdapter = new QuotesListAdapter(mQuotesFull);
         recyclerView.setAdapter(mAdapter);
+    }
 
+    public void refreshView(){
+        mQuotesFull = database.quotesDao().getAllQuotesFull();
 
-
+        mAdapter = new QuotesListAdapter(mQuotesFull);
+        recyclerView.setAdapter(mAdapter);
     }
 }

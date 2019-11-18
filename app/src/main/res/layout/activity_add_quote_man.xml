@@ -10,8 +10,6 @@
         android:id="@+id/quoteInput"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Write quote"
@@ -20,77 +18,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quoteInput">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Spinner
-                android:id="@+id/authorSpinner"
-                android:layout_width="285dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp" />
-
-            <Button
-                android:id="@+id/addAuthorButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                android:onClick="addAuthor"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Spinner
-                android:id="@+id/sourceSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp" />
-
-            <Button
-                android:id="@+id/addSourceButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                android:onClick="addSource"/>
-        </TableRow>
-
-    </TableLayout>
-
-    <EditText
-        android:id="@+id/descriptionInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:ems="10"
-        android:hint="Description"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
-
     <Button
         android:id="@+id/doneButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:gravity="center"
         android:onClick="doneClick"
         android:text="Done"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionInput" />
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
 
     <ProgressBar
         android:id="@+id/progressBarQuote"
@@ -109,12 +47,70 @@
         app:layout_constraintEnd_toEndOf="@+id/quoteInput"
         android:onClick="takePhoto"/>
 
-    <ImageView
-        android:id="@+id/imageViewPhoto"
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/doneButton"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:layout_constraintTop_toBottomOf="@+id/quoteInput">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Spinner
+                android:id="@+id/authorSpinner"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/addAuthorButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="addAuthor"
+                android:text="+" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Spinner
+                android:id="@+id/sourceSpinner"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/addSourceButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="addSource"
+                android:text="+" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <EditText
+                android:id="@+id/descriptionInput"
+                android:layout_width="269dp"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:hint="Description"
+                android:inputType="textPersonName" />
+
+            <ImageView
+                android:id="@+id/imageViewPhoto"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:srcCompat="@mipmap/ic_launcher" />
+        </TableRow>
+
+    </TableLayout>
 
 </android.support.constraint.ConstraintLayout>

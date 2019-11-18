@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.quotescollector.Model.QuoteFull;
 import com.example.quotescollector.R;
+import com.example.quotescollector.SQLDatabase.Handler.QuotesDatabase;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
         TextView quoteTextView, authorTextView;
         private  List<QuoteFull> quoteFullList;
         Context context;
+        QuotesDatabase database;
 
         public QuotesViewHolder(View view, List<QuoteFull> quoteFullList, Context context) {
             super(view);
@@ -41,6 +43,8 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
             view.setOnLongClickListener(this);
 
             this.authorTextView = view.findViewById(R.id.authorTV);
+
+            database = QuotesDatabase.getInstance(context);
         }
 
         @Override
@@ -65,7 +69,7 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
                 case R.id.menu_item_delete:
                     System.out.println("Usuwanaie");
                     // TODO: usuwanie
-//                    deleteQuote();
+                    deleteQuote(itemView.getRootView());
                     return true;
                 case R.id.menu_item_modify:
                     // TODO: modyfikacja
@@ -90,7 +94,19 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
             context.startActivity(intent);
         }
 
+        private void deleteQuote(View view){
+            int position = getAdapterPosition();
+            int quoteID = quoteFullList.get(position).quoteID;
+
+            database.quotesDao().deleteQuote(quoteID);
+
+            if (context.getClass().equals(QuotesListActivity.class)) {
+                ((QuotesListActivity) context).refreshView();
+            }
+        }
     }
+
+
 
     public QuotesListAdapter(List<QuoteFull> mQuotes) {
         this.mQuotes = mQuotes;

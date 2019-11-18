@@ -52,16 +52,15 @@ public class AddQuoteManActivity extends AppCompatActivity {
     protected EditText etQuote, etDescription;
     protected Spinner spinSource, spinAuthor;
     ProgressBar progressBar;
-    ImageView imageView;
+    ImageView imagePhoto;
 
-    private List<Author> authorList;
-    private List<SourceFull> sourceList;
+    protected List<Author> authorList;
+    protected List<SourceFull> sourceList;
 
-    private Author author;
-    private Quote quote;
-    private SourceFull source;
-    private int sourceID;
-    private int sourceTypeID;
+    protected Author author;
+    protected SourceFull source;
+    protected int sourceID;
+    protected int sourceTypeID;
 
     OCR ocr;
     String mCameraFileName;
@@ -72,6 +71,7 @@ public class AddQuoteManActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_quote_man);
+
 
         database = QuotesDatabase.getInstance(this);
 
@@ -110,7 +110,9 @@ public class AddQuoteManActivity extends AppCompatActivity {
         fillSourceSpinner();
 
         //==========================================================
-        imageView = (ImageView) findViewById(R.id.imageViewPhoto);
+        imagePhoto = (ImageView) findViewById(R.id.imageViewPhoto);
+        imagePhoto.setVisibility(View.VISIBLE);
+
         progressBar = findViewById(R.id.progressBarQuote);
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -125,7 +127,8 @@ public class AddQuoteManActivity extends AppCompatActivity {
             String sUri = extras.getString("imageUri");
             if(sUri != null){
                 ocr.setUri(sUri);
-                imageView.setImageURI(ocr.getUri());
+                imagePhoto.setImageURI(ocr.getUri());
+                imagePhoto.setVisibility(View.VISIBLE);
             }
         }
         //==========================================================
@@ -177,7 +180,6 @@ public class AddQuoteManActivity extends AppCompatActivity {
         }
     }
 
-    //TODO refactoring
     public void addSource(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Add source");
@@ -363,18 +365,19 @@ public class AddQuoteManActivity extends AppCompatActivity {
             if (requestCode == 2) {
                 if (data != null) {
                     ocr.setUri(data.getData());
-                    imageView.setImageURI(ocr.getUri());
-                    imageView.setVisibility(View.VISIBLE);
+                    imagePhoto.setImageURI(ocr.getUri());
+                    imagePhoto.setVisibility(View.VISIBLE);
                 }
                 if (mCameraFileName != null) {
                     ocr.setUri(Uri.fromFile(new File(mCameraFileName)));
 //                    try {
 //                        Bitmap photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), outputFileUri);
-//                        imageView
+//                        imagePhoto
 
-                    imageView.setImageURI(ocr.getUri());
+                    imagePhoto.setImageURI(ocr.getUri());
+                    imagePhoto.setVisibility(View.VISIBLE);
 
-//                    imageView.setOnClickListener(new View.OnClickListener() {
+//                    imagePhoto.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
 //                            Intent intent = new Intent(v.getContext(), PhotoActivity.class);
@@ -396,7 +399,8 @@ public class AddQuoteManActivity extends AppCompatActivity {
     }
 
     private void requestPermissions() {
-        String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA};
         requestTool = new RequestPermissionsToolImpl();
         requestTool.requestPermissions(this, permissions);
     }
@@ -421,6 +425,17 @@ public class AddQuoteManActivity extends AppCompatActivity {
     }
 
     public void takePhoto(View view) {
+        if (ocr != null && !ocr.isExtractorNull()){
+            ocr.cancelTask();
+            progressBar.setVisibility(View.INVISIBLE);
+        }
         startCameraActivity();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ocr != null && ocr.isExtractorNull())
+            ocr.cancelTask();
     }
 }

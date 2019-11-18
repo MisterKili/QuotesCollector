@@ -85,15 +85,15 @@ public class MainActivity extends AppCompatActivity {
 
         database.quotesDao().insertQuote(new Quote("Byl sobie wielki wybuch", "jakis opis",
                 2, 1));
-
-        for(SourceFull sf : database.quotesDao().getAllSourceFull()){
-            Log.d("aaaa", sf.toString());
-        }
+//
+//        for(SourceFull sf : database.quotesDao().getAllSourceFull()){
+//            Log.d("aaaa", sf.toString());
+//        }
 
 
         //==========================================================
 //        textView = (TextView) findViewById(R.id.textViewResult);
-//        imageView = (ImageView) findViewById(R.id.imageViewPhoto);
+//        imagePhoto = (ImageView) findViewById(R.id.imageViewPhoto);
 //        progressBar = findViewById(R.id.progressBar);
 //        progressBar.setVisibility(View.INVISIBLE);
 //
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 //            String sUri = extras.getString("imageUri");
 //            if(sUri != null){
 //                ocr.setUri(sUri);
-//                imageView.setImageURI(ocr.getUri());
+//                imagePhoto.setImageURI(ocr.getUri());
 //            }
 //        }
         //==========================================================

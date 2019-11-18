@@ -88,5 +88,13 @@ public interface QuotesDao {
     @Query("DELETE FROM Quote;")
     public void deleteAllQuotes();
 
+    @Query("DELETE FROM Quote WHERE quoteID = :id")
+    public void deleteQuote(int id);
 
+
+    // ===================== UPDATE =====================
+    @Query("UPDATE Quote " +
+            "SET quote = :quote, description = :description, authorID = :authorID, sourceID = :sourceID " +
+            "WHERE quoteID = :id")
+    public void updateQuote(int id, String quote, String description, int authorID, int sourceID);
 }

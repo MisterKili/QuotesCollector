@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.quotescollector.View.MainActivity;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.File;
@@ -34,6 +33,8 @@ public class OCR {
     Uri image;
 
     Context context;
+
+    TextExtractorTask extractor;
 
 
     public OCR(Context context){
@@ -139,7 +140,7 @@ public class OCR {
 
 //            result = extractText(bitmap);
 
-            TextExtractorTask extractor = new TextExtractorTask(bitmap, textView, progressBar);
+            extractor = new TextExtractorTask(bitmap, textView, progressBar);
             extractor.execute();
 
         } catch (Exception e) {
@@ -177,6 +178,19 @@ public class OCR {
         }
         tessBaseApi.end();
         return extractedText;
+    }
+
+    public boolean isExtractorNull(){
+        if (extractor == null)
+            return true;
+        else
+            return false;
+    }
+
+    public void cancelTask(){
+        if(extractor != null){
+            extractor.cancel(true);
+        }
     }
 
 
