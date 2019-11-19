@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Toast;
 
 import com.example.quotescollector.Model.QuoteFull;
 import com.example.quotescollector.R;
@@ -27,7 +25,7 @@ public class QuotesListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quotes_list);
 
-        recyclerView = (RecyclerView) findViewById(R.id.quotesRV);
+        recyclerView = (RecyclerView) findViewById(R.id.quotesRV2);
 
         recyclerView.setHasFixedSize(true);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this,
@@ -43,14 +41,14 @@ public class QuotesListActivity extends AppCompatActivity {
 
 
 
-        mAdapter = new QuotesListAdapter(mQuotesFull);
+        mAdapter = new QuotesListAdapter(this, mQuotesFull);
         recyclerView.setAdapter(mAdapter);
     }
 
     public void refreshView(){
         mQuotesFull = database.quotesDao().getAllQuotesFull();
 
-        mAdapter = new QuotesListAdapter(mQuotesFull);
+        mAdapter = new QuotesListAdapter(this, mQuotesFull);
         recyclerView.setAdapter(mAdapter);
     }
 }

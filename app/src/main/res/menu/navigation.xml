@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_quotes"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:title="Quotes" />
+
+    <item
+        android:id="@+id/navigation_authors"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="Authors" />
+
+    <item
+        android:id="@+id/navigation_sources"
+        android:icon="@android:drawable/picture_frame"
+        android:title="Sources" />
+
+</menu>

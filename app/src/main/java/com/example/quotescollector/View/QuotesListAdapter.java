@@ -17,14 +17,66 @@ import com.example.quotescollector.Model.QuoteFull;
 import com.example.quotescollector.R;
 import com.example.quotescollector.SQLDatabase.Handler.QuotesDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.QuotesViewHolder> {
 
     private List<QuoteFull> mQuotes;
+    private List<QuoteFull> mQuotesCopy = new ArrayList<>();
+    private LayoutInflater mInflater;
+    Context context;
+
+
+    public QuotesListAdapter(Context context, List<QuoteFull> mQuotes) {
+        this.mQuotes = mQuotes;
+        mInflater = LayoutInflater.from(context);
+        mQuotesCopy.addAll(mQuotes);
+        this.context = context;
+        System.out.println(mQuotesCopy.toString());
+    }
+
+
+    @Override
+    public QuotesListAdapter.QuotesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = mInflater.inflate(R.layout.quote_row, parent, false);
+        QuotesViewHolder vh = new QuotesViewHolder(v, mQuotes, context);
+        return vh;
+    }
+
+
+    @Override
+    public void onBindViewHolder(QuotesViewHolder holder, int position) {
+        holder.quoteTextView.setText(mQuotes.get(position).quote);
+        holder.authorTextView.setText(mQuotes.get(position).getAuthor());
+    }
+
+    @Override
+    public int getItemCount() {
+        return mQuotes.size();
+    }
+
+
+
+
+    public void filter(String text) {
+        mQuotes.clear();
+        if(text.isEmpty()){
+            mQuotes.addAll(mQuotesCopy);
+        } else{
+            text = text.toLowerCase();
+            for(QuoteFull quoteFull: mQuotesCopy){
+                if(quoteFull.quote.toLowerCase().contains(text)) {
+                    mQuotes.add(quoteFull);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
 
     public static class QuotesViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,
-                                                                PopupMenu.OnMenuItemClickListener {
+            PopupMenu.OnMenuItemClickListener {
 
         TextView quoteTextView, authorTextView;
         private  List<QuoteFull> quoteFullList;
@@ -38,7 +90,7 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
             this.context = context;
 
             this.quoteTextView = view.findViewById(R.id.quoteTV);
-            quoteTextView.setWidth(Resources.getSystem().getDisplayMetrics().widthPixels / 2);
+            quoteTextView.setWidth(Resources.getSystem().getDisplayMetrics().widthPixels * 2 / 3);
 
             view.setOnLongClickListener(this);
 
@@ -104,35 +156,5 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
                 ((QuotesListActivity) context).refreshView();
             }
         }
-    }
-
-
-
-    public QuotesListAdapter(List<QuoteFull> mQuotes) {
-        this.mQuotes = mQuotes;
-    }
-
-
-    @Override
-    public QuotesListAdapter.QuotesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.quote_row, parent, false);
-
-        QuotesViewHolder vh = new QuotesViewHolder(v, mQuotes, parent.getContext());
-        return vh;
-    }
-
-
-    @Override
-    public void onBindViewHolder(QuotesViewHolder holder, int position) {
-
-        holder.quoteTextView.setText(mQuotes.get(position).quote);
-        holder.authorTextView.setText(mQuotes.get(position).getAuthor());
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return mQuotes.size();
     }
 }
