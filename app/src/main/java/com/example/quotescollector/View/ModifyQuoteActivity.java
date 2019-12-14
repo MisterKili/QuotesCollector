@@ -1,6 +1,5 @@
 package com.example.quotescollector.View;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,9 +7,8 @@ import android.widget.Toast;
 
 import com.example.quotescollector.Model.QuoteFull;
 import com.example.quotescollector.Model.SourceFull;
-import com.example.quotescollector.SQLDatabase.DatabaseModel.Quote;
 
-public class ModifyQuoteActivity extends AddQuoteManActivity {
+public class ModifyQuoteActivity extends AddQuoteActivity {
 
 
     QuoteFull quoteFull;

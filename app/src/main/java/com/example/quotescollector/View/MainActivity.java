@@ -14,10 +14,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import com.example.quotescollector.R;
-import com.example.quotescollector.SQLDatabase.DatabaseModel.Author;
-import com.example.quotescollector.SQLDatabase.DatabaseModel.Quote;
-import com.example.quotescollector.SQLDatabase.DatabaseModel.Source;
-import com.example.quotescollector.SQLDatabase.DatabaseModel.SourceType;
 import com.example.quotescollector.SQLDatabase.Handler.QuotesDatabase;
 
 
@@ -90,22 +86,17 @@ public class MainActivity extends AppCompatActivity implements QuotesListFragmen
 
         database = QuotesDatabase.getInstance(this);
 
-
-
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 
-//        quotesListFragment = new QuotesListFragment();
-//        fragmentTransaction.add(R.id.container, quotesListFragment);
-//        currentFragment = quotesListFragment;
-//        fragmentTransaction.attach(quotesListFragment);
-//        fragmentTransaction.commit();
-
-        findViewById(R.id.addButton).setVisibility(View.INVISIBLE);
-        findViewById(R.id.listButton).setVisibility(View.INVISIBLE);
+        quotesListFragment = new QuotesListFragment();
+        fragmentTransaction.add(R.id.container, quotesListFragment);
+        currentFragment = quotesListFragment;
+        fragmentTransaction.attach(quotesListFragment);
+        fragmentTransaction.commit();
 
 //        database.quotesDao().insertAuthor(new Author("Stephen King"));
 //        database.quotesDao().insertAuthor(new Author("Stephen Hawking"));
@@ -135,21 +126,10 @@ public class MainActivity extends AppCompatActivity implements QuotesListFragmen
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AddQuoteManActivity.class);
+                Intent intent = new Intent(view.getContext(), AddQuoteActivity.class);
                 startActivity(intent);
             }
         });
-    }
-
-
-    public void toList(View view) {
-        Intent intent = new Intent(this, QuotesListActivity.class);
-        startActivity(intent);
-    }
-
-    public void toAdd(View view) {
-        Intent intent = new Intent(this, AddQuoteManActivity.class);
-        startActivity(intent);
     }
 
 

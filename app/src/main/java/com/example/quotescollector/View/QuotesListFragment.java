@@ -76,6 +76,9 @@ public class QuotesListFragment extends Fragment {
 
         database = QuotesDatabase.getInstance(getContext());
         mQuotesFull = database.quotesDao().getAllQuotesFull();
+        for (QuoteFull q : mQuotesFull){
+            q.setSource(database.quotesDao().getSourceFullOne(q.sourceID));
+        }
 
         mAdapter = new QuotesListAdapter(getContext(), mQuotesFull);
         recyclerView.setAdapter(mAdapter);

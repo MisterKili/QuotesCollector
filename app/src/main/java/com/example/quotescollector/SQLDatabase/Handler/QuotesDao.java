@@ -4,8 +4,10 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import com.example.quotescollector.Model.AuthorWithNumbOfQ;
 import com.example.quotescollector.Model.QuoteFull;
 import com.example.quotescollector.Model.SourceFull;
+import com.example.quotescollector.Model.tools.SourceFullWithNumbOfQ;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Author;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Category;
 import com.example.quotescollector.SQLDatabase.DatabaseModel.Colour;
@@ -82,6 +84,19 @@ public interface QuotesDao {
             "JOIN source s ON q.sourceID = s.sourceID " +
             "WHERE q.quoteID = :id")
     public QuoteFull getQuoteFull(int id);
+
+    @Query("SELECT a.authorID, a.authorName, COUNT(*) as numberOfQuotes " +
+            "FROM Author a JOIN Quote q ON q.authorID = a.authorID " +
+            "GROUP BY a.authorID, a.authorName " +
+            "ORDER BY numberOfQuotes")
+    public List<AuthorWithNumbOfQ> getAuthorWithNumberOfQuotesAll();
+
+    @Query("SELECT sourceTitle, st.sourceTypeName, s.sourceID, COUNT(*) as numberOfQuotes " +
+            "FROM Source s JOIN SourceType st ON s.sourceTypeID = st.sourceTypeID " +
+            "JOIN Quote q ON s.sourceID = q.sourceID " +
+            "GROUP BY s.sourceID, st.sourceTypeName " +
+            "ORDER BY numberOfQuotes")
+    public List<SourceFullWithNumbOfQ> getSourceFullWithNumberOfQuotesAll();
 
 
     // ===================== DELETE =====================

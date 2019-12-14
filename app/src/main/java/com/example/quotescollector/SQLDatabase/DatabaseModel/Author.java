@@ -1,6 +1,7 @@
 package com.example.quotescollector.SQLDatabase.DatabaseModel;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -11,6 +12,10 @@ public class Author {
     public int authorID;
 
     public String authorName;
+
+    @Ignore
+    public Author(){
+    }
 
     public Author(String authorName) {
         this.authorName = authorName;

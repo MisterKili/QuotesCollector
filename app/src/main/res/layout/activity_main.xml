@@ -8,26 +8,6 @@
     tools:context=".View.MainActivity">
 
 
-    <Button
-        android:id="@+id/listButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="toList"
-        android:text="List"
-        tools:layout_editor_absoluteX="4dp"
-        tools:layout_editor_absoluteY="6dp" />
-
-    <Button
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:onClick="toAdd"
-        android:text="Add"
-        app:layout_constraintTop_toBottomOf="@+id/listButton"
-        tools:layout_editor_absoluteX="9dp" />
-
-
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"

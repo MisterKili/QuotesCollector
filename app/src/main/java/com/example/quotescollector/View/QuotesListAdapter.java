@@ -32,8 +32,8 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
         this.mQuotes = mQuotes;
         mInflater = LayoutInflater.from(context);
         mQuotesCopy.addAll(mQuotes);
-        this.context = context;
         System.out.println(mQuotesCopy.toString());
+        this.context = context;
     }
 
 
@@ -47,8 +47,7 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
 
     @Override
     public void onBindViewHolder(QuotesViewHolder holder, int position) {
-        holder.quoteTextView.setText(mQuotes.get(position).quote);
-        holder.authorTextView.setText(mQuotes.get(position).getAuthor());
+        holder.quoteTextView.setText(mQuotes.get(position).getQuoteFull());
     }
 
     @Override
@@ -75,28 +74,28 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
     }
 
 
-    public static class QuotesViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,
-            PopupMenu.OnMenuItemClickListener {
+    public class QuotesViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,
+            PopupMenu.OnMenuItemClickListener, View.OnClickListener {
 
-        TextView quoteTextView, authorTextView;
+        TextView quoteTextView, authorTextView, sourceTextView;
         private  List<QuoteFull> quoteFullList;
-        Context context;
         QuotesDatabase database;
+        Context context;
 
         public QuotesViewHolder(View view, List<QuoteFull> quoteFullList, Context context) {
             super(view);
 
             this.quoteFullList = quoteFullList;
-            this.context = context;
 
             this.quoteTextView = view.findViewById(R.id.quoteTV);
             quoteTextView.setWidth(Resources.getSystem().getDisplayMetrics().widthPixels * 2 / 3);
 
             view.setOnLongClickListener(this);
+            view.setOnClickListener(this);
 
-            this.authorTextView = view.findViewById(R.id.authorTV);
+            this.context = context;
 
-            database = QuotesDatabase.getInstance(context);
+            database = QuotesDatabase.getInstance(view.getContext());
         }
 
         @Override
@@ -120,12 +119,9 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
             switch (item.getItemId()) {
                 case R.id.menu_item_delete:
                     System.out.println("Usuwanaie");
-                    // TODO: usuwanie
                     deleteQuote(itemView.getRootView());
                     return true;
                 case R.id.menu_item_modify:
-                    // TODO: modyfikacja
-//                    System.out.println("ID: " + getAdapterPosition() + " " + mQuotes);
                     modifyQuote(itemView.getRootView());
                     System.out.println("Modyfikacja");
                     return true;
@@ -141,8 +137,9 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
             QuoteFull sf = quoteFullList.get(position);
             System.out.println("Id: " + sf.quoteID + " quote: " + sf.quote + " author: " + sf.authorName);
 
-            Intent intent = new Intent(context, ModifyQuoteActivity.class);
+            Intent intent = new Intent(view.getContext(), ModifyQuoteActivity.class);
             intent.putExtra("quoteID", quoteID);
+
             context.startActivity(intent);
         }
 
@@ -151,10 +148,20 @@ public class QuotesListAdapter extends RecyclerView.Adapter<QuotesListAdapter.Qu
             int quoteID = quoteFullList.get(position).quoteID;
 
             database.quotesDao().deleteQuote(quoteID);
+            mQuotes.remove(getAdapterPosition());
+            mQuotesCopy.remove(getAdapterPosition());
+            notifyItemRemoved(getAdapterPosition());
+        }
 
-            if (context.getClass().equals(QuotesListActivity.class)) {
-                ((QuotesListActivity) context).refreshView();
-            }
+        @Override
+        public void onClick(View view) {
+            Toast.makeText(view.getContext(), "Kliknieto", Toast.LENGTH_SHORT).show();
+            int position = getAdapterPosition();
+            int quoteID = quoteFullList.get(position).quoteID;
+
+            Intent intent = new Intent(view.getContext(), QuoteDetailsActivity.class);
+            intent.putExtra("quoteID", quoteID);
+            context.startActivity(intent);
         }
     }
 }

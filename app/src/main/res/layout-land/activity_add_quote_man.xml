@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.AddQuoteManActivity">
+    tools:context=".View.AddQuoteActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,79 +24,100 @@
             android:minWidth="200dp"
             android:singleLine="false" />
 
-        <LinearLayout
+        <ProgressBar
+            android:id="@+id/progressBarQuote"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/takePhoto"
+            android:layout_width="55dp"
+            android:layout_height="53dp"
+            android:background="@android:drawable/ic_menu_camera"
+            android:onClick="takePhoto" />
+
+        <TableLayout
+            android:id="@+id/tableLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginLeft="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/quoteInput">
 
-            <TableLayout
-                android:id="@+id/tableLayout"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="1dp"
-                android:layout_marginLeft="1dp">
+                android:layout_height="match_parent">
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <Spinner
+                    android:id="@+id/authorSpinner"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"/>
 
-                    <Spinner
-                        android:id="@+id/authorSpinner"
-                        android:layout_width="285dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp" />
+                <Button
+                    android:id="@+id/addAuthorButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="addAuthor"
+                    android:text="+" />
+            </TableRow>
 
-                    <Button
-                        android:id="@+id/addAuthorButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="addAuthor"
-                        android:text="+" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Spinner
-                        android:id="@+id/sourceSpinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp" />
-
-                    <Button
-                        android:id="@+id/addSourceButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:onClick="addSource"
-                        android:text="+" />
-                </TableRow>
-
-            </TableLayout>
-
-            <EditText
-                android:id="@+id/descriptionInput"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:ems="10"
-                android:hint="Description"
-                android:inputType="textPersonName" />
+                android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/doneButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal|center_vertical"
-                android:onClick="doneClick"
-                android:text="Done" />
+                <Spinner
+                    android:id="@+id/sourceSpinner"
+                    android:layout_width="200dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"/>
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/addSourceButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="addSource"
+                    android:text="+" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <EditText
+                    android:id="@+id/descriptionInput"
+                    android:layout_width="269dp"
+                    android:layout_height="match_parent"
+                    android:ems="10"
+                    android:hint="Description"
+                    android:inputType="textPersonName" />
+
+                <ImageView
+                    android:id="@+id/imageViewPhoto"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:srcCompat="@mipmap/ic_launcher" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/doneButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center"
+                    android:onClick="doneClick"
+                    android:text="Done" />
+            </TableRow>
+
+        </TableLayout>
 
     </LinearLayout>
 

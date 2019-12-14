@@ -7,6 +7,8 @@ public class SourceFull {
     public String sourceTypeName;
     public int sourceID;
 
+    public SourceFull(){}
+
 
 //    public SourceFull(String sourceTitle, String sourceTypeName) {
 //        this.sourceTitle = sourceTitle;

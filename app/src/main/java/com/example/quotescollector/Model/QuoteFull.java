@@ -2,15 +2,15 @@ package com.example.quotescollector.Model;
 
 import android.arch.persistence.room.Ignore;
 
-public class QuoteFull {
+import java.io.Serializable;
+
+public class QuoteFull implements Serializable {
 
     public int quoteID;
 
     public String quote;
     public String description;
-
     public String authorName;
-
     public int sourceID;
 
     @Ignore
@@ -29,17 +29,21 @@ public class QuoteFull {
         return authorName;
     }
 
+    public void setSource(SourceFull source) {
+        this.source = source;
+    }
 
-//    public SourceFull get
+    public String getQuoteWithQuotemarks(){
+        return "\"" + quote + "\"";
+    }
 
-//    public Quote getQuoteObj(){
-//        Quote q = new Quote(quote, description, authorID, source.sourceID);
-//        return q;
-//    }
-
-//    public Author getAuthorObj(){
-//        Author a = new Author(authorName);
-//        return a;
-//    }
-
+    public String getQuoteFull(){
+        StringBuilder stringBuilder = new StringBuilder(getQuoteWithQuotemarks());
+        stringBuilder.append("\n~ ");
+        stringBuilder.append(authorName);
+        stringBuilder.append(" (");
+        stringBuilder.append(source.sourceTitle);
+        stringBuilder.append(")");
+        return stringBuilder.toString();
+    }
 }
